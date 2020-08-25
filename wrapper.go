@@ -12,7 +12,6 @@ import (
 
 var (
 	ErrInvalidMetricType = errors.New("invalid metric type")
-	ErrMetricNotFound    = errors.New("metric not found")
 )
 
 type promWrapper struct {
@@ -88,10 +87,7 @@ func (p *promWrapper) Remove(metric monitor.BrickMetric) error {
 	if !ok {
 		return ErrInvalidMetricType
 	}
-	found := prometheus.Unregister(collector)
-	if !found {
-		return ErrMetricNotFound
-	}
+	prometheus.Unregister(collector)
 	return nil
 }
 
