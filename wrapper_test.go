@@ -6,25 +6,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/go-masonry/mortar/interfaces/monitor"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
 type promSuite struct {
 	suite.Suite
-	reporter monitor.BricksReporter
 }
 
 func TestSuite(t *testing.T) {
 	suite.Run(t, new(promSuite))
-}
-
-func (d *promSuite) TestPromWrapperBuilder() {
-	err := d.reporter.Connect(context.Background())
-	assert.NoError(d.T(), err)
-	err = d.reporter.Close(context.Background())
-	assert.NoError(d.T(), err)
 }
 
 func (d *promSuite) TestNamespace() {
@@ -32,7 +22,7 @@ func (d *promSuite) TestNamespace() {
 	reporter := Builder().SetNamespace(namespace).Build()
 	err := reporter.Connect(context.Background())
 	d.NoError(err)
-	counter, err := reporter.Metrics().Counter("counter", "")
+	counter, err := reporter.Metrics().Counter("counter_namespace", "")
 	d.NoError(err)
 	counter.WithTags(nil).Inc()
 	err = reporter.Close(context.Background())
@@ -53,7 +43,7 @@ func (d *promSuite) TestTags() {
 	reporter := Builder().Build()
 	err := reporter.Connect(context.Background())
 	d.NoError(err)
-	counter, err := reporter.Metrics().Counter("counter", "", tagKeys...)
+	counter, err := reporter.Metrics().Counter("counter_tags", "", tagKeys...)
 	d.NoError(err)
 	counter.WithTags(tags).Inc()
 	err = reporter.Close(context.Background())
