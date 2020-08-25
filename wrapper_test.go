@@ -104,3 +104,13 @@ func (d *promSuite) TestHistogram() {
 	d.Require().Contains(body, "histogram_sum 7")
 	d.Require().Contains(body, "histogram_count 1")
 }
+
+func (d *promSuite) TestRemove() {
+	reporter := Builder().Build()
+	err := reporter.Connect(context.Background())
+	d.NoError(err)
+	counter, err := reporter.Metrics().Counter("counter_remove", "")
+	d.NoError(err)
+	err = reporter.Metrics().Remove(counter)
+	d.NoError(err)
+}
