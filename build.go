@@ -13,7 +13,7 @@ type promBuilder struct {
 	ll *list.List
 }
 
-func Builder() monitor.Builder {
+func Builder() *promBuilder {
 	return &promBuilder{
 		ll: list.New(),
 	}
