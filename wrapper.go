@@ -82,6 +82,21 @@ func (p *promWrapper) Histogram(name, desc string, buckets []float64, tagKeys ..
 	}, nil
 }
 
+func (p *promWrapper) Timer(name, desc string, tagKeys ...string) (monitor.BricksTimer, error) {
+	histogramVec := prometheus.NewHistogramVec(prometheus.HistogramOpts{
+		Namespace: p.namespace,
+		Name:      name,
+		Help:      desc,
+	}, tagKeys)
+	err := prometheus.Register(histogramVec)
+	if err != nil {
+		return nil, err
+	}
+	return &promTimerVec{
+		HistogramVec: histogramVec,
+	}, nil
+}
+
 func (p *promWrapper) Remove(metric monitor.BrickMetric) error {
 	collector, ok := metric.(prometheus.Collector)
 	if !ok {
