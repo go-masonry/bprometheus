@@ -26,6 +26,6 @@ test:
 
 test-with-report: test cover-report
 
-code-up-to-date: generate go-fmt go-lint
+code-up-to-date: go-fmt go-lint
 
 all: code-up-to-date test-with-report 
