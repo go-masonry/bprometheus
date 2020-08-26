@@ -3,11 +3,9 @@ package bprometheus
 import (
 	"context"
 	"errors"
-	"net/http"
 
 	"github.com/go-masonry/mortar/interfaces/monitor"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var (
@@ -104,11 +102,6 @@ func (p *promWrapper) Remove(metric monitor.BrickMetric) error {
 	}
 	prometheus.Unregister(collector)
 	return nil
-}
-
-// HTTPHandler provides the Prometheus HTTP scrape handler.
-func HTTPHandler() http.Handler {
-	return promhttp.Handler()
 }
 
 var _ monitor.BricksReporter = (*promWrapper)(nil)
