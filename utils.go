@@ -18,11 +18,20 @@ func PrometheusInternalHandlerFxOption() fx.Option {
 	})
 }
 
-// PrometheusHTTPHandlerPatternPair provides mortar Internal HTTP Pattern Pair
-// It can later be registered to serve metrics endpoint on internal port
-func PrometheusHTTPHandlerPatternPair() types.HTTPHandlerPatternPair {
+func prometheusHTTPHandlerPatternPair() types.HTTPHandlerPatternPair {
 	return types.HTTPHandlerPatternPair{
 		Pattern: "/metrics",
+		Handler: HTTPHandler(),
+	}
+}
+
+// PrometheusHTTPHandlerPatternPair provides mortar Internal HTTP Pattern Pair
+// It can later be registered to serve metrics endpoint on internal port
+//
+// Call this function to customize your http pattern
+func PrometheusHTTPHandlerPatternPair(pattern string) types.HTTPHandlerPatternPair {
+	return types.HTTPHandlerPatternPair{
+		Pattern: pattern,
 		Handler: HTTPHandler(),
 	}
 }

@@ -13,7 +13,14 @@ type promBuilder struct {
 	ll *list.List
 }
 
-func Builder() *promBuilder {
+// PrometheusBuilder defines Prometheus builder
+type PrometheusBuilder interface {
+	monitor.Builder
+	SetNamespace(namespace string) monitor.Builder
+}
+
+// Builder creates a builder to create Prometheus client
+func Builder() PrometheusBuilder {
 	return &promBuilder{
 		ll: list.New(),
 	}

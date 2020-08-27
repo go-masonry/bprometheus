@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrInvalidMetricType = errors.New("invalid metric type")
+	errInvalidMetricType = errors.New("invalid metric type")
 )
 
 type promWrapper struct {
@@ -98,7 +98,7 @@ func (p *promWrapper) Timer(name, desc string, tagKeys ...string) (monitor.Brick
 func (p *promWrapper) Remove(metric monitor.BrickMetric) error {
 	collector, ok := metric.(prometheus.Collector)
 	if !ok {
-		return ErrInvalidMetricType
+		return errInvalidMetricType
 	}
 	prometheus.Unregister(collector)
 	return nil
