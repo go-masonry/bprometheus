@@ -14,7 +14,7 @@ import (
 func PrometheusInternalHandlerFxOption() fx.Option {
 	return fx.Provide(fx.Annotated{
 		Group:  groups.InternalHTTPHandlers,
-		Target: PrometheusHTTPHandlerPatternPair,
+		Target: prometheusHTTPHandlerPatternPair,
 	})
 }
 
