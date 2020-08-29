@@ -3,7 +3,7 @@ module github.com/go-masonry/bprometheus
 go 1.14
 
 require (
-	github.com/go-masonry/mortar v0.0.0-20200826163119-8fae0c7b7102
+	github.com/go-masonry/mortar v0.1.0
 	github.com/prometheus/client_golang v1.7.1
 	github.com/prometheus/common v0.13.0 // indirect
 	github.com/stretchr/testify v1.6.1
