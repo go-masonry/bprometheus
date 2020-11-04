@@ -8,8 +8,8 @@ import (
 )
 
 type promConfig struct {
-	namespace  string
-	collectors []prometheus.Collector
+	namespace            string
+	predefinedCollectors []prometheus.Collector
 }
 type promBuilder struct {
 	ll *list.List
@@ -20,10 +20,10 @@ type PrometheusBuilder interface {
 	monitor.Builder
 	// SetNamespace allows to set a default Prometheus Namespace
 	SetNamespace(namespace string) PrometheusBuilder
-	// AddCollectors allows to register predefined Collectors to the same Prometheus Registry
+	// AddPredefinedCollectors allows to register predefined Collectors to the same Prometheus Registry
 	// *** Actual registration will occur only when the `monitor.BricksReporter.Connect(ctx)` is called ***
 	// *** Any error returned during registration will fail the `Connect` method.
-	AddCollectors(collectors ...prometheus.Collector) PrometheusBuilder
+	AddPredefinedCollectors(collectors ...prometheus.Collector) PrometheusBuilder
 }
 
 // Builder creates a builder to create Prometheus client
@@ -40,9 +40,9 @@ func (s *promBuilder) SetNamespace(namespace string) PrometheusBuilder {
 	return s
 }
 
-func (s *promBuilder) AddCollectors(collectors ...prometheus.Collector) PrometheusBuilder {
+func (s *promBuilder) AddPredefinedCollectors(collectors ...prometheus.Collector) PrometheusBuilder {
 	s.ll.PushBack(func(cfg *promConfig) {
-		cfg.collectors = append(cfg.collectors, collectors...)
+		cfg.predefinedCollectors = append(cfg.predefinedCollectors, collectors...)
 	})
 	return s
 }

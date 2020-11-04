@@ -157,7 +157,7 @@ func (d *promSuite) TestCustomCollectors() {
 		Name:      "another",
 		Help:      "",
 	})
-	reporter := Builder().AddCollectors(counterCollector).AddCollectors(anotherCollector).SetNamespace("different").Build()
+	reporter := Builder().AddPredefinedCollectors(counterCollector).AddPredefinedCollectors(anotherCollector).SetNamespace("different").Build()
 	err := reporter.Connect(context.Background())
 	d.NoError(err)
 	// Count
