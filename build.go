@@ -4,10 +4,12 @@ import (
 	"container/list"
 
 	"github.com/go-masonry/mortar/interfaces/monitor"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 type promConfig struct {
-	namespace string
+	namespace  string
+	collectors []prometheus.Collector
 }
 type promBuilder struct {
 	ll *list.List
@@ -16,7 +18,12 @@ type promBuilder struct {
 // PrometheusBuilder defines Prometheus builder
 type PrometheusBuilder interface {
 	monitor.Builder
-	SetNamespace(namespace string) monitor.Builder
+	// SetNamespace allows to set a default Prometheus Namespace
+	SetNamespace(namespace string) PrometheusBuilder
+	// AddCollectors allows to register predefined Collectors to the same Prometheus Registry
+	// *** Actual registration will occur only when the `monitor.BricksReporter.Connect(ctx)` is called ***
+	// *** Any error returned during registration will fail the `Connect` method.
+	AddCollectors(collectors ...prometheus.Collector) PrometheusBuilder
 }
 
 // Builder creates a builder to create Prometheus client
@@ -26,9 +33,16 @@ func Builder() PrometheusBuilder {
 	}
 }
 
-func (s *promBuilder) SetNamespace(namespace string) monitor.Builder {
+func (s *promBuilder) SetNamespace(namespace string) PrometheusBuilder {
 	s.ll.PushBack(func(cfg *promConfig) {
 		cfg.namespace = namespace
+	})
+	return s
+}
+
+func (s *promBuilder) AddCollectors(collectors ...prometheus.Collector) PrometheusBuilder {
+	s.ll.PushBack(func(cfg *promConfig) {
+		cfg.collectors = append(cfg.collectors, collectors...)
 	})
 	return s
 }
