@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -143,4 +144,30 @@ func (d *promSuite) TestRemove() {
 	d.NoError(err)
 	err = reporter.Metrics().Remove(counter)
 	d.NoError(err)
+}
+
+func (d *promSuite) TestCustomCollectors() {
+	counterCollector := prometheus.NewCounter(prometheus.CounterOpts{
+		Namespace: "custom",
+		Name:      "counter",
+		Help:      "",
+	})
+	anotherCollector := prometheus.NewCounter(prometheus.CounterOpts{
+		Namespace: "custom",
+		Name:      "another",
+		Help:      "",
+	})
+	reporter := Builder().AddPredefinedCollectors(counterCollector).AddPredefinedCollectors(anotherCollector).SetNamespace("different").Build()
+	err := reporter.Connect(context.Background())
+	d.NoError(err)
+	// Count
+	counterCollector.Inc()
+	anotherCollector.Inc()
+
+	handler := HTTPHandler()
+	recorder := httptest.NewRecorder()
+	handler.ServeHTTP(recorder, &http.Request{})
+	body := recorder.Body.String()
+	d.Require().Contains(body, "counter 1")
+	d.Require().Contains(body, "another 1")
 }

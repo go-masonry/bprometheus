@@ -13,16 +13,24 @@ var (
 )
 
 type promWrapper struct {
-	namespace string
+	namespace            string
+	predefinedCollectors []prometheus.Collector
 }
 
 func newPromWrapper(cfg *promConfig) monitor.BricksReporter {
 	return &promWrapper{
-		namespace: cfg.namespace,
+		namespace:            cfg.namespace,
+		predefinedCollectors: cfg.predefinedCollectors,
 	}
 }
 
 func (p *promWrapper) Connect(ctx context.Context) error {
+	// Register all predefined Collectors
+	for _, collector := range p.predefinedCollectors {
+		if err := prometheus.Register(collector); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
