@@ -126,14 +126,16 @@ func (d *promSuite) TestTimer() {
 	timerWithTags, err := timer.WithTags(nil)
 	d.NoError(err)
 	timerWithTags.Record(7 * time.Second)
+	timerWithTags.Record(100 * time.Second)
+	timerWithTags.Record(1000 * time.Second)
 	err = reporter.Close(context.Background())
 	d.NoError(err)
 	handler := HTTPHandler()
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder, &http.Request{})
 	body := recorder.Body.String()
-	d.Require().Contains(body, "histogram_sum 7")
-	d.Require().Contains(body, "histogram_count 1")
+	d.Require().Contains(body, "timer_sum 1107")
+	d.Require().Contains(body, "timer_count 3")
 }
 
 func (d *promSuite) TestRemove() {

@@ -9,6 +9,7 @@ import (
 )
 
 var (
+	DefBuckets           = []float64{.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10, 30, 60, 120, 300, 600}
 	errInvalidMetricType = errors.New("invalid metric type")
 )
 
@@ -93,6 +94,7 @@ func (p *promWrapper) Timer(name, desc string, tagKeys ...string) (monitor.Brick
 		Namespace: p.namespace,
 		Name:      name,
 		Help:      desc,
+		Buckets:   DefBuckets,
 	}, tagKeys)
 	err := prometheus.Register(histogramVec)
 	if err != nil {
