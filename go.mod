@@ -3,11 +3,9 @@ module github.com/go-masonry/bprometheus
 go 1.14
 
 require (
-	github.com/cespare/xxhash/v2 v2.1.2 // indirect
-	github.com/go-masonry/mortar v1.0.25
-	github.com/prometheus/client_golang v1.11.0
-	github.com/prometheus/common v0.32.1 // indirect
-	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/stretchr/testify v1.7.0
-	go.uber.org/fx v1.16.0
+	github.com/go-masonry/mortar v1.0.31
+	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
+	github.com/prometheus/client_golang v1.14.0
+	github.com/stretchr/testify v1.8.0
+	go.uber.org/fx v1.18.2
 )
